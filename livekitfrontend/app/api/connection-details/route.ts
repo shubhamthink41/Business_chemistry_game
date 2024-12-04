@@ -32,7 +32,7 @@ export type ConnectionDetails = {
   dynamicContent: string;
 };
 
-export async function fetchToken(
+async function fetchToken(
   participantName: string,
   roomId: string,
   SECRET_CODE: string,

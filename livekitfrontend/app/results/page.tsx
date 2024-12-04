@@ -1,10 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import Confetti from "react-confetti";
 import { useSearchParams } from "next/navigation";
 import { useWindowSize } from "react-use";
 import { motion } from "framer-motion";
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResultsPage />
+    </Suspense>
+  );
+}
 
 
 const ResultsPage = () => {
@@ -76,5 +84,3 @@ const ResultsPage = () => {
     </div>
   );
 };
-
-export default ResultsPage;
