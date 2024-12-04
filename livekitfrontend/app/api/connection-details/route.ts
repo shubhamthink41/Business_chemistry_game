@@ -1,35 +1,66 @@
 import { NextResponse } from "next/server";
-
+import { v4 as uuidv4 } from 'uuid';
 interface TokenResponse {
   token: string;
+  room_name: string;
+  metadata: object;
 }
-// Environment variables for secure credentials
-const API_URL = "https://fastapi-server-1081098542602.us-central1.run.app/getToken/";
+
+const questions: string[] = [
+  "Your team is struggling with a critical project that's significantly behind schedule. Key team members are demotivated, and the client is becoming increasingly impatient. How would you turn this situation around and get the project back on track?",
+  "You've discovered a potential major inefficiency in your organization's workflow that could save millions but would require restructuring several departments. Describe how you would approach presenting and implementing this transformative idea.",
+  "A senior executive has proposed a strategy that you believe could potentially harm the company's long-term prospects. How would you navigate this delicate situation while maintaining professional relationships?",
+  "Your team is experiencing significant communication breakdowns and internal conflicts that are impacting project delivery. What comprehensive approach would you take to rebuild team dynamics and improve collaboration?",
+  "You find yourself leading a group of strangers through a challenging wilderness expedition with limited resources. Describe how you would ensure the team's survival and maintain group morale.",
+  "A mysterious technological artifact has been discovered that could potentially change the course of human civilization. Walk us through your approach to understanding and responsibly managing this discovery.",
+  "You've been given the opportunity to design a completely new society from scratch on an uninhabited planet. What fundamental principles and structures would you implement?",
+  "An unexpected global crisis threatens the stability of human civilization. Outline your strategy for coordinating a response and helping humanity navigate this extreme challenge.",
+  "You discover you have the ability to solve one global problem completely. Which problem would you choose, and how would you approach solving it?",
+  "You're transported to a world where the laws of physics work differently. Describe how you would adapt and help your team survive in this completely alien environment.",
+  "A time-travel opportunity allows you to make one significant intervention in human history. What would you choose to do, and how would you minimize unintended consequences?",
+  "You've been given unlimited resources to create a revolutionary educational system that could transform how humans learn and grow. Describe your vision and approach.",
+];
+
+const API_URL =
+  "https://fastapi-server-1081098542602.us-central1.run.app/getToken/";
 
 export type ConnectionDetails = {
   serverUrl: string;
   roomId: string;
   participantName: string;
   participantToken: string;
+  dynamicContent: string;
 };
-
-
 
 export async function fetchToken(
   participantName: string,
   roomId: string,
-  SECRET_CODE: string
+  SECRET_CODE: string,
+  resumeSession: boolean = false,
+  dynamicContent: string = ""
 ): Promise<string> {
-  // Construct the API URL with dynamic parameters
-  const url = `https://fastapi-server-1081098542602.us-central1.run.app/getToken/?name=${participantName}&room_name=${roomId}&secret_code=${SECRET_CODE}`;
+  const requestBody = {
+    room_name: roomId,
+    name: participantName,
+    secret_code: SECRET_CODE,
+    resume_session: resumeSession,
+    dynamic_content: dynamicContent,
+  };
 
   try {
     // Make the API request
-    const response = await fetch(url);
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
 
-    // Check if the response is successful
     if (!response.ok) {
-      throw new Error(`Failed to fetch token: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch token: ${response.status} ${response.statusText}`
+      );
     }
 
     // Parse the JSON response
@@ -51,10 +82,11 @@ export async function fetchToken(
     throw error;
   }
 }
+
 export async function GET() {
   try {
-    const LIVEKIT_URL = process.env.LIVEKIT_URL;
-    const SECRET_CODE = "9f7694e7-518f-49dd-8a4b-c95f1a1ea5f8"; // Secret code for API call
+    const LIVEKIT_URL = process.env.LIVEKIT_URL; // Securely store and fetch this from environment variables
+    const SECRET_CODE = process.env.SECRET_CODE; // Use environment variable for the secret code
 
     if (!LIVEKIT_URL) {
       throw new Error("LIVEKIT_URL is not defined");
@@ -65,10 +97,29 @@ export async function GET() {
 
     // Generate a random room ID and participant name
     const roomId = generateRandomRoomId();
-    const participantName = `voice_assistant_user_${Math.floor(Math.random() * 10_000)}`;
+    const participantName = `BC_${uuidv4()}`.slice(0, 20);
+
+    function getRandomQuestions(arr: string[], num: number): string[] {
+      const shuffled = arr.sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, num);
+    }
+
+    // Get 5 random questions
+    const randomQuestions: string[] = getRandomQuestions(questions, 5);
+    const resultString: string = JSON.stringify(randomQuestions);
+
+
+    console.log("Selected random Questions are : ", randomQuestions);
+    const dynamicContent = resultString;
 
     // Fetch the participant token
-    const participantToken = await fetchToken(participantName, roomId, SECRET_CODE);
+    const participantToken = await fetchToken(
+      participantName,
+      roomId,
+      SECRET_CODE,
+      false,
+      dynamicContent
+    );
 
     // Return connection details
     const data: ConnectionDetails = {
@@ -76,6 +127,7 @@ export async function GET() {
       roomId,
       participantName,
       participantToken,
+      dynamicContent,
     };
 
     return NextResponse.json(data);
@@ -87,12 +139,6 @@ export async function GET() {
   }
 }
 
-// Helper function to generate a random room ID (alphanumeric string of 10 characters)
 function generateRandomRoomId(): string {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-  for (let i = 0; i < 10; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
+    return uuidv4();
 }
