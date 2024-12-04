@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -12,6 +14,7 @@ import { MediaDeviceFailure } from "livekit-client";
 import RadarChart from "@/app/RadarChart";
 import type { AgentState } from "@livekit/components-react";
 import { useRouter } from "next/navigation";
+import TranscriptionHandler from "../components/TranscriptionHandler";
 
 interface TranscriptResponse {
   results: {
@@ -32,11 +35,15 @@ interface ConnectionDetails {
 }
 
 export default function Page() {
-  const [connectionDetails, updateConnectionDetails] = useState<ConnectionDetails | undefined>(undefined);
+  const [connectionDetails, updateConnectionDetails] = useState<
+    ConnectionDetails | undefined
+  >(undefined);
   const [agentState, setAgentState] = useState<AgentState>("disconnected");
-    const [roomId, setRoomId] = useState<string>("");
-  const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(null);
-  
+  const [roomId, setRoomId] = useState<string>("");
+  const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(
+    null
+  );
+
   const [scores, setScores] = useState({
     pioneer: 0,
     driver: 0,
@@ -58,13 +65,35 @@ export default function Page() {
     guardian: 0,
   });
 
+  const [jsonResult, setJsonResult] = useState<string[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+
+  useEffect(() => {
+    const checkLocalStorage = () => {
+      const questionLog = localStorage.getItem("questionLog");
+      if (questionLog) {
+        const index = parseInt(questionLog);
+        setCurrentQuestionIndex(index);
+      }
+    };
+
+    checkLocalStorage();
+
+    const interval = setInterval(checkLocalStorage, 100);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const fetchTranscript = async (sessionId: string) => {
     try {
-      const analyzeResponse = await fetch("http://localhost:5000/api/analyze_transcripts/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomId: sessionId }),
-      });
+      const analyzeResponse = await fetch(
+        "http://localhost:5000/api/analyze_transcripts/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ roomId: sessionId }),
+        }
+      );
 
       if (!analyzeResponse.ok) throw new Error("Analyze API error");
 
@@ -72,7 +101,10 @@ export default function Page() {
       console.log("Full response data:", data);
 
       if (!Array.isArray(data.results)) {
-        console.error("Expected 'results' to be an array, but got:", data.results);
+        console.error(
+          "Expected 'results' to be an array, but got:",
+          data.results
+        );
         return;
       }
 
@@ -82,7 +114,8 @@ export default function Page() {
       data.results.forEach(({ scores: resultScores }) => {
         if (resultScores) {
           Object.keys(resultScores).forEach((key) => {
-            updatedScores[key as keyof typeof updatedScores] += resultScores[key as keyof typeof resultScores];
+            updatedScores[key as keyof typeof updatedScores] +=
+              resultScores[key as keyof typeof resultScores];
             updatedCounts[key as keyof typeof updatedCounts] += 1;
           });
         }
@@ -96,7 +129,10 @@ export default function Page() {
   };
 
   const calculateAverages = () => {
-    const totalScores = Object.values(scores).reduce((acc, score) => acc + score, 0);
+    const totalScores = Object.values(scores).reduce(
+      (acc, score) => acc + score,
+      0
+    );
 
     if (totalScores === 0) {
       return { ...averages };
@@ -123,6 +159,12 @@ export default function Page() {
   const onConnectButtonClicked = useCallback(async () => {
     const response = await fetch("/api/connection-details");
     const connectionDetails = await response.json();
+
+    const parsedResult = JSON.parse(connectionDetails.dynamicContent);
+    setJsonResult(parsedResult);
+
+    console.log("parsedResult - ", parsedResult);
+
     updateConnectionDetails(connectionDetails);
     setRoomId(connectionDetails?.roomId);
 
@@ -143,6 +185,13 @@ export default function Page() {
     <main className="page-container">
       <div className="room-container">
         <div className="left-section">
+          {jsonResult.length > 0 && currentQuestionIndex > 0 ? (
+            <p className="current-question">
+              {jsonResult[currentQuestionIndex - 1]}
+            </p>
+          ) : (
+            <p>Hello</p>
+          )}
           <LiveKitRoom
             token={connectionDetails?.participantToken}
             serverUrl={connectionDetails?.serverUrl}
@@ -191,12 +240,21 @@ export default function Page() {
   );
 }
 
-function SimpleVoiceAssistant({ onStateChange }: { onStateChange: (state: AgentState) => void }) {
+function SimpleVoiceAssistant({
+  onStateChange,
+}: {
+  onStateChange: (state: AgentState) => void;
+}) {
   const { state, audioTrack } = useVoiceAssistant();
   useEffect(() => onStateChange(state), [state]);
 
   return (
-    <BarVisualizer state={state} barCount={5} trackRef={audioTrack} className="visualizer" />
+    <BarVisualizer
+      state={state}
+      barCount={5}
+      trackRef={audioTrack}
+      className="visualizer"
+    />
   );
 }
 
@@ -230,6 +288,7 @@ function ControlBar({
 
     const highestCategory = getHighestScoringCategory();
     console.log("Highest-scoring category:", highestCategory);
+    localStorage.clear();
 
     router.push(`/loading?category=${highestCategory}`);
   };
@@ -246,12 +305,16 @@ function ControlBar({
             className="flex h-8 absolute left-1/2 -translate-x-1/2 justify-center"
           >
             <VoiceAssistantControlBar controls={{ leave: false }} />
-            <DisconnectButton onClick={handleDisconnect} className="connect-btn">
+            <DisconnectButton
+              onClick={handleDisconnect}
+              className="connect-btn"
+            >
               END CONVERSATION
             </DisconnectButton>
           </motion.div>
         )}
       </AnimatePresence>
+      <TranscriptionHandler />
     </div>
   );
 }

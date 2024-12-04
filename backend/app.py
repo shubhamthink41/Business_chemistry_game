@@ -14,14 +14,12 @@ app = Flask(__name__)
 CORS(app)
 
 
-
 # Load .env file
 load_dotenv()
 
 # Access the variables
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_API_URL = os.getenv("GROQ_API_URL")
-
 
 
 # FastAPI Endpoint for transcripts
@@ -60,19 +58,22 @@ def analyze_transcripts():
         transcript_response = requests.get(transcript_url)
 
         # Log the transcript response status
-        logger.info(f"Fetched transcript response status: {transcript_response.status_code}")
+        logger.info(
+            f"Fetched transcript response status: {transcript_response.status_code}")
         if transcript_response.status_code != 200:
-            logger.error(f"Error fetching transcripts: {transcript_response.text}")
+            logger.error(
+                f"Error fetching transcripts: {transcript_response.text}")
             return jsonify({'error': 'Failed to fetch transcripts'}), 502
 
         # Parse the transcript data
         transcript_data = transcript_response.json()
         logger.info(f"Transcript data received: {transcript_data}")
 
-                # Check if the conversation has ended
+        # Check if the conversation has ended
         if has_conversation_ended(transcript_data):
-            logger.info("Conversation has ended. No further analysis required.")
-            #return jsonify({'message': 'Conversation has ended'}), 200
+            logger.info(
+                "Conversation has ended. No further analysis required.")
+            # return jsonify({'message': 'Conversation has ended'}), 200
 
         # Check if enough new entries are available for processing
         existing_length = transcript_cache.get(room_id, 0)
@@ -88,18 +89,19 @@ def analyze_transcripts():
                     'integrator': 0,
                     'guardian': 0
                 }
-                }
+            }
 
-            return jsonify({"results":[dummy_response]}),200
+            return jsonify({"results": [dummy_response]}), 200
 
         # Update cache for the roomId
         transcript_cache[room_id] = new_length
 
         # Extract questions and answers from the transcripts
-        questions_and_answers = extract_questions_and_answers(transcript_data, existing_length)
-        #if not questions_and_answers:
-            #logger.error("No valid questions and answers found in transcripts")
-            #return jsonify({'error': 'No questions and answers found in transcripts'}), 400
+        questions_and_answers = extract_questions_and_answers(
+            transcript_data, existing_length)
+        # if not questions_and_answers:
+        # logger.error("No valid questions and answers found in transcripts")
+        # return jsonify({'error': 'No questions and answers found in transcripts'}), 400
 
         # Send each question-answer pair to Groq for scoring
         for idx, qa in enumerate(questions_and_answers, start=1):
@@ -111,28 +113,29 @@ def analyze_transcripts():
                 continue
 
             # Log each question-answer pair
-            logger.info(f"Processing question {idx}: {question} with answer: {answer}")
+            logger.info(
+                f"Processing question {idx}: {question} with answer: {answer}")
 
             # Send question-answer to Groq for scoring
             groq_response = send_to_groq(question, answer, idx)
             logger.info(f"groq scoring:{groq_response}")
 
         # Return the aggregated results
-            if(groq_response):
+            if (groq_response):
                 return jsonify({'results': [groq_response]}), 200
             else:
                 dummy_response = {
-                'question': 'No valid question processed',
-                'answer': 'No valid answer processed',
-                'scores': {
-                    'pioneer': 0,
-                    'driver': 0,
-                    'integrator': 0,
-                    'guardian': 0
-                }
+                    'question': 'No valid question processed',
+                    'answer': 'No valid answer processed',
+                    'scores': {
+                        'pioneer': 0,
+                        'driver': 0,
+                        'integrator': 0,
+                        'guardian': 0
+                    }
                 }
 
-                return jsonify({"results":[dummy_response]}),200
+                return jsonify({"results": [dummy_response]}), 200
 
     except HTTPException as e:
         logger.error(f"HTTP Error: {str(e)}")
@@ -140,6 +143,7 @@ def analyze_transcripts():
     except Exception as e:
         logger.error(f"Unexpected error: {str(e)}")
         return jsonify({'error': 'An unexpected error occurred'}), 500
+
 
 def has_conversation_ended(transcript_data):
     """
@@ -157,7 +161,6 @@ def has_conversation_ended(transcript_data):
                     if role == 'assistant' and 'end the conversation' in content:
                         return True
     return False
-
 
 
 def extract_questions_and_answers(transcript_data, existing_length):
@@ -200,7 +203,8 @@ def send_to_groq(question, answer, question_id):
         return groq_response
 
     except Exception as e:
-        logger.error(f"Error processing question {question_id} with Groq: {str(e)}")
+        logger.error(
+            f"Error processing question {question_id} with Groq: {str(e)}")
         return {
             'question': question,
             'answer': answer,
@@ -214,8 +218,6 @@ def send_to_groq(question, answer, question_id):
         }
 
 
-
-
 def get_groq_scores(question, answer):
     """
     Sends a valid question-answer pair to the Groq API and returns the scores.
@@ -226,9 +228,7 @@ def get_groq_scores(question, answer):
             "role": "system",
             "content": f"""
             You are a business chemistry assessment score evaluator. Analyze the following question and answer pair and provide scores  out of 5 for Pioneer, Driver, Integrator, and Guardian. 
-
-            If the question or answer pairs dont relate or are out of context (e.g., 'Could you repeat the question?', "hey,I'm your business chemistry host for today",'I don't know', 'Can you clarify?'), assign a score of 0 to every category.
-
+            If the intent of the answer does not look like answer to the question,assign 1.
             Only respond in JSON format with the following structure:
             {{
                 "scores": {{
@@ -242,20 +242,20 @@ def get_groq_scores(question, answer):
             Question: '{question}'
             Answer: '{answer}'
             """
-            f"""if the question  doesnot exist in this list of  questions,assign score 0 for every category to that question answer pair:
-            1.You’re a superhero leading your team to save the day. The villain has thrown the team into chaos—some want a clear plan, others want to dive into action. What’s your superpower? Creating the perfect battle strategy or rallying everyone with an inspiring vision?
-2.The office coffee machine is broken—disaster! Do you organize a coffee rescue plan with timelines and steps, or do you charm the café staff next door to keep the team caffeinated? What’s your move?
-3.You’ve just been named the leader of a treasure hunt. The map has vague clues, and half the team wants to analyze every detail while the other half wants to run off exploring. How do you lead your team to the gold?
-4.Imagine you’re pitching a bold new idea to a room full of skeptics. Do you wow them with the data to back it up, or do you paint a vivid picture of what success looks like? What’s your pitch style?
-5.You’ve landed on an alien planet, and you’re tasked with figuring out how to survive. Do you take charge and assign roles, or do you work with the group to build consensus on a survival strategy? How do you handle it?
-6.It’s time to decorate the office for a surprise celebration. Do you create a detailed to-do list with timelines for everyone, or do you let the team’s creativity flow and improvise the decorations together? What’s your plan?
-7.You’re in charge of a high-stakes cooking competition, but there’s a twist—you’re missing some key ingredients. Do you creatively substitute to stay in the game, or do you take a calculated risk to create a new signature dish? How do you handle the challenge?
-8.The team has to choose between two big projects—one is high-risk but groundbreaking, the other is low-risk but guarantees steady success. How do you guide the team in making the decision?
-9.You’re on a reality TV show, and your team is under pressure to win. Do you take on the leadership role and steer the ship, or do you support others while ensuring harmony in the group? What’s your winning strategy?
-10.Your team is stranded on a deserted island. Do you focus on building a shelter with what’s available, or do you explore the island to find long-term solutions? What’s your survival instinct?
-11.You’ve been asked to design a new gadget for time travel. Do you jump into the brainstorming session, thinking big and wild, or do you lay out a step-by-step prototype plan? How do you approach this time-twisting task?
-12.You’re organizing a team retreat. Would you rather plan a structured agenda with breakout sessions or leave room for spontaneous brainstorming and creative activities? How do you bring the team together?
-"""
+            f"""if the question  does not exist in this list of  questions,assign score 0 for every category to that question answer pair:
+            1. Your team is struggling with a critical project that's significantly behind schedule. Key team members are demotivated, and the client is becoming increasingly impatient. How would you turn this situation around and get the project back on track?
+              2. You've discovered a potential major inefficiency in your organization's workflow that could save millions but would require restructuring several departments. Describe how you would approach presenting and implementing this transformative idea.
+              3. A senior executive has proposed a strategy that you believe could potentially harm the company's long-term prospects. How would you navigate this delicate situation while maintaining professional relationships?
+              4. Your team is experiencing significant communication breakdowns and internal conflicts that are impacting project delivery. What comprehensive approach would you take to rebuild team dynamics and improve collaboration?
+              5. You find yourself leading a group of strangers through a challenging wilderness expedition with limited resources. Describe how you would ensure the team's survival and maintain group morale.
+              6. A mysterious technological artifact has been discovered that could potentially change the course of human civilization. Walk us through your approach to understanding and responsibly managing this discovery.
+              7. You've been given the opportunity to design a completely new society from scratch on an uninhabited planet. What fundamental principles and structures would you implement?
+              8. An unexpected global crisis threatens the stability of human civilization. Outline your strategy for coordinating a response and helping humanity navigate this extreme challenge.
+              9. You discover you have the ability to solve one global problem completely. Which problem would you choose, and how would you approach solving it?
+              10. You're transported to a world where the laws of physics work differently. Describe how you would adapt and help your team survive in this completely alien environment.
+              11. A time-travel opportunity allows you to make one significant intervention in human history. What would you choose to do, and how would you minimize unintended consequences?
+              12. You've been given unlimited resources to create a revolutionary educational system that could transform how humans learn and grow. Describe your vision and approach.
+            """
         }
 
         groq_payload = {
@@ -268,16 +268,19 @@ def get_groq_scores(question, answer):
             'Content-Type': 'application/json',
         }
 
-        response = requests.post(GROQ_API_URL, json=groq_payload, headers=headers)
+        response = requests.post(
+            GROQ_API_URL, json=groq_payload, headers=headers)
 
         # Log the raw response
         logger.info(f"Groq raw response: {response.text}")
 
         if response.status_code != 200:
-            raise ValueError(f"Groq API returned status {response.status_code}")
+            raise ValueError(
+                f"Groq API returned status {response.status_code}")
 
         groq_response = response.json()
-        content = groq_response.get('choices', [{}])[0].get('message', {}).get('content', '{}')
+        content = groq_response.get('choices', [{}])[0].get(
+            'message', {}).get('content', '{}')
 
         # Parse content as JSON
         try:
@@ -287,12 +290,12 @@ def get_groq_scores(question, answer):
                 "integrator": 0,
                 "guardian": 0
             })
-            groq_sending=True
+            groq_sending = True
             logger.info(f"scores assigned by groq:{scores}")
             return {
-            'question': question,
-            'answer': answer,
-            'scores': scores
+                'question': question,
+                'answer': answer,
+                'scores': scores
             }
 
         except json.JSONDecodeError:
@@ -305,10 +308,9 @@ def get_groq_scores(question, answer):
             }
             logger.info(f"scores assigned by groq:{scores}")
 
-        
-    
     except Exception as e:
-        logger.error(f"Error processing question and answer with Groq: {str(e)}")
+        logger.error(
+            f"Error processing question and answer with Groq: {str(e)}")
         return {
             'question': question,
             'answer': answer,
@@ -320,9 +322,6 @@ def get_groq_scores(question, answer):
             },
             'error': 'Unexpected error'
         }
-
-
-
 
 
 # Run the Flask app
