@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 interface TokenResponse {
   token: string;
   room_name: string;
@@ -7,18 +7,13 @@ interface TokenResponse {
 }
 
 const questions: string[] = [
-  "Your team is struggling with a critical project that's significantly behind schedule. Key team members are demotivated, and the client is becoming increasingly impatient. How would you turn this situation around and get the project back on track?",
-  "You've discovered a potential major inefficiency in your organization's workflow that could save millions but would require restructuring several departments. Describe how you would approach presenting and implementing this transformative idea.",
-  "A senior executive has proposed a strategy that you believe could potentially harm the company's long-term prospects. How would you navigate this delicate situation while maintaining professional relationships?",
-  "Your team is experiencing significant communication breakdowns and internal conflicts that are impacting project delivery. What comprehensive approach would you take to rebuild team dynamics and improve collaboration?",
-  "You find yourself leading a group of strangers through a challenging wilderness expedition with limited resources. Describe how you would ensure the team's survival and maintain group morale.",
-  "A mysterious technological artifact has been discovered that could potentially change the course of human civilization. Walk us through your approach to understanding and responsibly managing this discovery.",
-  "You've been given the opportunity to design a completely new society from scratch on an uninhabited planet. What fundamental principles and structures would you implement?",
-  "An unexpected global crisis threatens the stability of human civilization. Outline your strategy for coordinating a response and helping humanity navigate this extreme challenge.",
-  "You discover you have the ability to solve one global problem completely. Which problem would you choose, and how would you approach solving it?",
-  "You're transported to a world where the laws of physics work differently. Describe how you would adapt and help your team survive in this completely alien environment.",
-  "A time-travel opportunity allows you to make one significant intervention in human history. What would you choose to do, and how would you minimize unintended consequences?",
-  "You've been given unlimited resources to create a revolutionary educational system that could transform how humans learn and grow. Describe your vision and approach.",
+  "You're stuck in a Las Vegas elevator with Elon Musk and a stand-up comedian. How do you keep everyone entertained for the next 5 min?",
+  "You've been given a free round-the-world ticket, but you can only choose three completely unrelated activities in 3 different cities. What would they be?",
+  "You are in MasterChef USA and you have been asked to reinvent a classic dish from your favorite cuisine. What dish would you like to reinvent and how? Also, what name would you give.",
+  "During a poker tournament, you realize the person next to you is Jeff Bezos. What would be your reaction?",
+  "As a Hollywood Director you have an opportunity to re-write the ending for a famous movie of yours. Which moview would this be and what would be the alternate ending.",
+  "You have the opportunity to suggest an unconventional team-building exercise that would actually make people want to participate enthusiastically. What would it be?",
+  "You've just hit the jackpot on a slot machine. What are your immediate thoughts and how do you plan to handle this sudden wealth?",
 ];
 
 const API_URL =
@@ -108,7 +103,6 @@ export async function GET() {
     const randomQuestions: string[] = getRandomQuestions(questions, 5);
     const resultString: string = JSON.stringify(randomQuestions);
 
-
     console.log("Selected random Questions are : ", randomQuestions);
     const dynamicContent = resultString;
 
@@ -140,5 +134,5 @@ export async function GET() {
 }
 
 function generateRandomRoomId(): string {
-    return uuidv4();
+  return uuidv4();
 }

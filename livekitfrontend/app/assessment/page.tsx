@@ -14,7 +14,7 @@ import { MediaDeviceFailure } from "livekit-client";
 import RadarChart from "@/app/RadarChart";
 import type { AgentState } from "@livekit/components-react";
 import { useRouter } from "next/navigation";
-import TranscriptionHandler from "../components/TranscriptionHandler";
+// import TranscriptionHandler from "";
 
 interface TranscriptResponse {
   results: {
@@ -65,31 +65,29 @@ export default function Page() {
     guardian: 0,
   });
 
-  const [jsonResult, setJsonResult] = useState<string[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+//   const [jsonResult, setJsonResult] = useState<string[]>([]);
+//   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
-  useEffect(() => {
-    const checkLocalStorage = () => {
-      const questionLog = localStorage.getItem("questionLog");
-      if (questionLog) {
-        const index = parseInt(questionLog);
-        setCurrentQuestionIndex(index);
-      }
-    };
+//   useEffect(() => {
+//     const checkLocalStorage = () => {
+//       const questionLog = localStorage.getItem("questionLog");
+//       if (questionLog) {
+//         const index = parseInt(questionLog);
+//         setCurrentQuestionIndex(index);
+//       }
+//     };
 
-    checkLocalStorage();
+//     checkLocalStorage();
 
-    const interval = setInterval(checkLocalStorage, 100);
+//     const interval = setInterval(checkLocalStorage, 100);
 
-    return () => clearInterval(interval);
-  }, []);
+//     return () => clearInterval(interval);
+//   }, []);
 
   const fetchTranscript = async (sessionId: string) => {
     try {
-      const BE_URL = process.env.BE_URL || "https://business-chemsitry-backend-1081098542602.us-central1.run.app";
-
       const analyzeResponse = await fetch(
-        BE_URL+"/api/analyze_transcripts/",
+        "http://localhost:5000/api/analyze_transcripts/",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -162,10 +160,10 @@ export default function Page() {
     const response = await fetch("/api/connection-details");
     const connectionDetails = await response.json();
 
-    const parsedResult = JSON.parse(connectionDetails.dynamicContent);
-    setJsonResult(parsedResult);
+    // const parsedResult = JSON.parse(connectionDetails.dynamicContent);
+    // setJsonResult(parsedResult);
 
-    console.log("parsedResult - ", parsedResult);
+    // console.log("parsedResult - ", parsedResult);
 
     updateConnectionDetails(connectionDetails);
     setRoomId(connectionDetails?.roomId);
@@ -186,14 +184,14 @@ export default function Page() {
   return (
     <main className="page-container">
       <div className="room-container">
-        <div className="left-section">
-          {jsonResult.length > 0 && currentQuestionIndex > 0 ? (
+        <div >  
+          {/* {jsonResult.length > 0 && currentQuestionIndex > 0 ? (
             <p className="current-question">
               {jsonResult[currentQuestionIndex - 1]}
             </p>
           ) : (
             <p>Hello</p>
-          )}
+          )} */}
           <LiveKitRoom
             token={connectionDetails?.participantToken}
             serverUrl={connectionDetails?.serverUrl}
@@ -296,7 +294,7 @@ function ControlBar({
   };
 
   return (
-    <div className="relative h-96">
+    <div className="relative h-[100px]">
       <AnimatePresence>
         {agentState !== "disconnected" && agentState !== "connecting" && (
           <motion.div
@@ -316,7 +314,7 @@ function ControlBar({
           </motion.div>
         )}
       </AnimatePresence>
-      <TranscriptionHandler />
+      {/* <TranscriptionHandler /> */}
     </div>
   );
 }
