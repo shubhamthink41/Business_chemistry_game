@@ -17,9 +17,8 @@
 
 .info-container,
 .results-container,
-.loading-container,
 .page-container {
-  background-image: url("./bg1.png");
+  background-image: url("./bg41.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

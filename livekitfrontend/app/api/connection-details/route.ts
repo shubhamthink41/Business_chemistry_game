@@ -13,6 +13,13 @@ const questions: string[] = [
   "During a poker tournament, you realize the person next to you is Jeff Bezos. What would be your reaction?",
   "As a Hollywood Director you have an opportunity to re-write the ending for a famous movie of yours. Which moview would this be and what would be the alternate ending.",
   "You have the opportunity to suggest an unconventional team-building exercise that would actually make people want to participate enthusiastically. What would it be?",
+  "You are throwing a house party and have the opportunity to invite 3 famous celebrities. Who would they be and why",
+  "You discover a unique athletic ability that no one else has and you can use it any sport of your choice? what will your superpower be and which sport will you use it in?",
+  "You’re invited to a private dinner with the captain of your favorite sports team. What conversation starter do you use to break the ice?",
+  "You find yourself living out the plot of your favorite movie, but with the ability to change one critical moment. What would you alter?",
+  "Design the most unique travel experience possible that doesn't involve traditional tourism. What's your concept?",
+  "You have been given a flight ticket to an unknown destination, but you have to leave in the next 10 min, what all will you pack in your bag?",
+  "You have the opportunity to suggest an unconventional team-building exercise that would actually make people want to participate enthusiastically. What would it be?",
   "You've just hit the jackpot on a slot machine. What are your immediate thoughts and how do you plan to handle this sudden wealth?",
 ];
 
