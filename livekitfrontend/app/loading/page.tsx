@@ -1,7 +1,15 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+
+export default function LoadingPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Loading />
+    </Suspense>
+  );
+}
 
 const Loading = () => {
   const router = useRouter();
@@ -52,5 +60,3 @@ const Loading = () => {
     </div>
   );
 };
-
-export default Loading;

@@ -86,8 +86,10 @@ export default function Page() {
 
   const fetchTranscript = async (sessionId: string) => {
     try {
+      const BE_URL = process.env.BE_URL || "https://business-chemsitry-backend-1081098542602.us-central1.run.app";
+
       const analyzeResponse = await fetch(
-        "http://localhost:5000/api/analyze_transcripts/",
+        BE_URL+"/api/analyze_transcripts/",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
