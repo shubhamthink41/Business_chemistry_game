@@ -11,7 +11,6 @@ import { VoiceAssistantControlBar } from "@livekit/components-react";
 import { useVoiceAssistant } from "@livekit/components-react";
 import { DisconnectButton } from "@livekit/components-react";
 import { MediaDeviceFailure } from "livekit-client";
-import RadarChart from "@/app/RadarChart";
 import type { AgentState } from "@livekit/components-react";
 import { useRouter } from "next/navigation";
 // import TranscriptionHandler from "";
@@ -290,7 +289,7 @@ function ControlBar({
     console.log("Highest-scoring category:", highestCategory);
     localStorage.clear();
 
-    router.push(`/loading?category=${highestCategory}`);
+    router.push(`/results?category=${highestCategory}`);
   };
 
   return (

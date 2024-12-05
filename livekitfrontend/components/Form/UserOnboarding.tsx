@@ -3,14 +3,17 @@
 import { useState } from "react";
 import { UserNameInput } from "./UserNameInput";
 import { PhotoCapture } from "./PhotoCapture";
+import { useRouter } from "next/navigation";
 
 export function UserOnboarding() {
+  const router = useRouter();
   const [photo, setPhoto] = useState<string | null>(null);
   const [name, setName] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log({ name, photo });
+    router.push('/assessment')
   };
 
   return (
@@ -34,7 +37,8 @@ export function UserOnboarding() {
             />
           </div>
 
-          <button
+          <button 
+
             type="submit"
             // disabled={!photo || !name}
             disabled={!name}
