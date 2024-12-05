@@ -33,6 +33,17 @@ logging.basicConfig(level=logging.INFO)
 transcript_cache = {}
 
 
+@app.route('/', methods=['GET'])
+def health_check():
+    """
+    Simple health check endpoint to verify server status.
+    """
+    return jsonify({
+        'status': 'healthy',
+        'message': 'Server is up and running'
+    }), 200
+
+
 @app.route('/api/analyze_transcripts/', methods=['POST'])
 def analyze_transcripts():
     """
