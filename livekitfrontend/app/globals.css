@@ -18,7 +18,7 @@
 .info-container,
 .results-container,
 .page-container {
-  background-image: url("./bg41.png");
+  background-image: url("./bgfinal.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -31,7 +31,13 @@
   background-color: black;
 }
 
-.room-container {
+/* styles/globals.css */
+body {
+  font-family: 'Bowlby One', sans-serif;
+}
+
+
+/* .room-container { 
   background: rgba(255, 255, 255, 0.85);
   border: 10px solid #f16e00;
   border-radius: 20px;
@@ -40,9 +46,9 @@
   min-height: 400px;
   display: flex;
   padding: 20px;
-  gap: 40px; /* Optional gap between sections */
+  gap: 40px; /* Optional gap between sections 
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-}
+}*/
 
 .left-section,
 .right-section {
@@ -95,15 +101,175 @@
   animation: fadeIn 2s ease-in-out;
 }
 
-.homepage-container{
-  background-image: url("./bg41.png");
+
+
+.homepage{
+  background-image: url("./bgfinal.jpg");
   background-size: cover;
-  background-position: bottom;
+  background-position: center;
   background-repeat: no-repeat;
-  display: 'flex';
-  flex-direction: 'column';
-  align-items: 'center';
-  justify-Content: 'center';
-  height: '100vh';
-  text-Align: 'center',
+}
+
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.title {
+  font-size: 78.78px;
+  font-weight: 'bold';
+  margin-top: 50px;
+  margin-bottom: 1rem;
+  line-height: 69.33px;
+  letter-spacing: 4%;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  font-family: 'Bowlby One', sans-serif;
+  background: linear-gradient(7.29deg, #F16E00 35.04%, #F7C729 82.89%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  
+}
+
+.image-container {
+  
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 20px;
+  margin-top:80px;
+
+}
+
+.image-box {
+  width: 350px;/* Adjust as needed */
+  height: 500px; /* Adjust as needed */
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px; /* Adds space around each image box */
+  display: inline-block; /* Ensures it wraps naturally with other elements */
+
+
+  
+}
+
+.image-box img {
+  width: 100%;/* Adjust as needed */
+  height: 100%; /*Adjust as needed */
+  object-fit:fill;
+}
+
+.room-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.connect-btn {
+  padding: 10px 20px;
+  background-color: #f16e00;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.connect-btn:hover {
+  background-color: #f7c729;
+}
+
+.end-btn {
+  padding: 12px 25px;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.end-btn:hover {
+  background-color: #e60000;
+}
+
+.control-bar {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* styles/globals.css */
+@font-face {
+  font-family: 'Bowlby One';
+  src: url('/fonts/BowlbyOne-Regular.woff2') format('woff2'),
+       url('/fonts/BowlbyOne-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Yellow Light Flicker */
+@keyframes yellowFlicker {
+  0%, 100% {
+    box-shadow: 0 0 20px 5px rgba(255, 255, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px 10px rgba(255, 255, 0, 0.8);
+  }
+}
+
+.image-box.yellow-light {
+  animation: yellowFlicker 1.5s infinite alternate;
+}
+
+/* Blue Light Flicker */
+@keyframes blueFlicker {
+  0%, 100% {
+    box-shadow: 0 0 20px 5px rgba(0, 0, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px 10px rgba(0, 0, 255, 0.8);
+  }
+}
+
+.image-box.blue-light {
+  animation: blueFlicker 1.5s infinite alternate;
+}
+
+/* Red Light Flicker */
+@keyframes redFlicker {
+  0%, 100% {
+    box-shadow: 0 0 20px 5px rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px 10px rgba(255, 0, 0, 0.8);
+  }
+}
+
+.image-box.red-light {
+  animation: redFlicker 1.5s infinite alternate;
+}
+
+/* Orange Light Flicker */
+@keyframes orangeFlicker {
+  0%, 100% {
+    box-shadow: 0 0 20px 5px rgba(255, 165, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px 10px rgba(255, 165, 0, 0.8);
+  }
+}
+
+.image-box.orange-light {
+  animation: orangeFlicker 1.5s infinite alternate;
+  
 }
