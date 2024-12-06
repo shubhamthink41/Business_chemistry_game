@@ -354,9 +354,7 @@ CORS(app)
 
 # Load .env file
 load_dotenv()
-
-# Register routes
-app.register_blueprint(api_routes)
+     
 
 # Run the Flask app
 if __name__ == '__main__':
