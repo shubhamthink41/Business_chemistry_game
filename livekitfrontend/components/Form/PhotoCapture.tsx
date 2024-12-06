@@ -5,6 +5,8 @@
 import { useRef } from "react";
 import { useCamera } from "./hooks/useCamera";
 import { MdCameraAlt } from "react-icons/md";
+import Image from "next/image";
+
 
 
 interface PhotoCaptureProps {
@@ -40,7 +42,7 @@ export function PhotoCapture({
   if (photo) {
     return (
       <div className="space-y-3">
-        <img
+        <Image
           src={photo}
           alt="Captured photo"
           className="w-full h-[300px] object-cover rounded-lg"

@@ -2,6 +2,7 @@
 
 import { SetStateAction, useState } from "react";
 import { CameraCapture } from "./CameraCapture";
+import Image from "next/image";
 
 export function UserForm() {
   const [photo, setPhoto] = useState<string | null>(null);
@@ -25,16 +26,12 @@ export function UserForm() {
           <div className="space-y-2">
             {photo ? (
               <div className="flex flex-col items-center gap-2">
-                <img
+                <Image
                   src={photo}
                   alt="Captured"
                   className="rounded-lg max-w-sm w-full"
                 />
-                <button
-                  onClick={() => setPhoto(null)}
-                >
-                  Retake Photo
-                </button>
+                <button onClick={() => setPhoto(null)}>Retake Photo</button>
               </div>
             ) : (
               <CameraCapture onPhotoCapture={setPhoto} />
@@ -46,7 +43,9 @@ export function UserForm() {
               type="text"
               placeholder="Enter your name"
               value={name}
-              onChange={(e: { target: { value: SetStateAction<string>; }; }) => setName(e.target.value)}
+              onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                setName(e.target.value)
+              }
               required
             />
           </div>
