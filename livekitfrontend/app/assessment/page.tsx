@@ -13,6 +13,9 @@ import { DisconnectButton } from "@livekit/components-react";
 import { MediaDeviceFailure } from "livekit-client";
 import type { AgentState } from "@livekit/components-react";
 import { useRouter } from "next/navigation";
+import Image from 'next/image';
+
+import card1 from "./card1.png";
 // import TranscriptionHandler from "";
 
 interface TranscriptResponse {
@@ -184,16 +187,25 @@ export default function Page() {
 
   return (
     <main className="page-container">
-      <div className="room-container">
-        <div >  
-          {/* {jsonResult.length > 0 && currentQuestionIndex > 0 ? (
-            <p className="current-question">
-              {jsonResult[currentQuestionIndex - 1]}
-            </p>
-          ) : (
-            <p>Hello</p>
-          )} */}
-          <LiveKitRoom
+      <h1 className="title">ALCHEMIST OF VEGAS</h1>
+
+      <div className="image-container">
+      <div className="image-box yellow-light">
+      <img src="/images/card1.png" alt="Image 1"/>
+        </div>
+        <div className="image-box orange-light">
+        <img src="/images/card2.png" alt="Image 2" />
+        </div>
+        <div className="image-box blue-light">
+        <img src="/images/card3.png" alt="Image 3" />
+        </div>
+        <div className="image-box red-light">
+        <img src="/images/card4.png" alt="Image 4" />
+        </div>
+        
+      </div>
+
+      <LiveKitRoom
             token={connectionDetails?.participantToken}
             serverUrl={connectionDetails?.serverUrl}
             connect={Boolean(connectionDetails)}
@@ -231,16 +243,9 @@ export default function Page() {
 
             <RoomAudioRenderer />
           </LiveKitRoom>
-        </div>
-
-        {/* <div className="right-section">
-          <RadarChart averages={averages} />
-        </div> */}
-      </div>
     </main>
   );
 }
-
 function SimpleVoiceAssistant({
   onStateChange,
 }: {
@@ -258,6 +263,7 @@ function SimpleVoiceAssistant({
     />
   );
 }
+
 
 function ControlBar({
   onConnectButtonClicked,
@@ -305,7 +311,7 @@ function ControlBar({
             transition={{ duration: 0.4, ease: [0.09, 1.04, 0.245, 1.055] }}
             className="flex h-8 absolute left-1/2 -translate-x-1/2 justify-center"
           >
-            <VoiceAssistantControlBar controls={{ leave: false }} />
+           <VoiceAssistantControlBar controls={{ leave: false }} />
             <DisconnectButton
               onClick={handleDisconnect}
               className="connect-btn"

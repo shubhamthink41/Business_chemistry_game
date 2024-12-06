@@ -3,6 +3,9 @@
 import Head from 'next/head';
 import { useRouter } from 'next/navigation';
 
+import bgImage from './bg41.png';
+
+
 export default function Home() {
   const router = useRouter();
 
@@ -10,10 +13,11 @@ export default function Home() {
     <>
       <Head>
         <title>Business Chemistry Sorting Ceremony</title>
+
       </Head>
 
-      <div style={styles.container}>
-        <h1 style={styles.title}>Business Alchemist</h1>
+      <div className="homepage" style={styles.container}>
+        <h1 style={styles.title}>ALCHEMIST OF VEGAS</h1>
         <p style={styles.subtitle}>
           “Ah, yes. I know just where to put you...”
         </p>
@@ -34,14 +38,25 @@ const styles: { [key: string]: React.CSSProperties } = {
     height: '100vh',
     color: '#f97316',
     textAlign: 'center',
-    backgroundColor:'#000000',
+    backgroundImage: `url(${bgImage})`,
     
   },
 
   title: {
-    fontSize: '3.5rem',
+    fontSize: '78.78px',
     fontWeight: 'bold',
     marginBottom: '1rem',
+    lineHeight:'69.33px',
+    letterSpacing:'4%',
+    textUnderlinePosition: 'from-font',
+    textDecorationSkipInk:'none',
+    background: 'linear-gradient(7.29deg, #F16E00 35.04%, #F7C729 82.89%)',
+    WebkitBackgroundClip: 'text',
+    backgroundClip: 'text',
+    color:'transparent',
+    fontFamily:'Bowlby One'
+
+    
   },
   subtitle: {
     fontSize: '1.25rem',
