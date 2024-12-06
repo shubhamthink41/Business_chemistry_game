@@ -344,7 +344,7 @@ from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
-from routes.api_routes import api_routes  # Import the routes
+from routes.api_routes import api_routes  
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -354,6 +354,8 @@ CORS(app)
 
 # Load .env file
 load_dotenv()
+
+app.register_blueprint(api_routes, url_prefix='/')
      
 
 # Run the Flask app
