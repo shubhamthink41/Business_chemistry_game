@@ -84,9 +84,11 @@ export default function Page() {
 //   }, []);
 
   const fetchTranscript = async (sessionId: string) => {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL; // Load API base URL from environment
+
     try {
       const analyzeResponse = await fetch(
-        "http://localhost:5000/api/analyze_transcripts/",
+        `${baseUrl}/api/analyze_transcripts/`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

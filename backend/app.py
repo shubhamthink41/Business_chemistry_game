@@ -254,18 +254,20 @@ def get_groq_scores(question, answer):
             Answer: '{answer}'
             """
             f"""if the question  does not exist in this list of  questions,assign score 0 for every category to that question answer pair:
-            1. Your team is struggling with a critical project that's significantly behind schedule. Key team members are demotivated, and the client is becoming increasingly impatient. How would you turn this situation around and get the project back on track?
-              2. You've discovered a potential major inefficiency in your organization's workflow that could save millions but would require restructuring several departments. Describe how you would approach presenting and implementing this transformative idea.
-              3. A senior executive has proposed a strategy that you believe could potentially harm the company's long-term prospects. How would you navigate this delicate situation while maintaining professional relationships?
-              4. Your team is experiencing significant communication breakdowns and internal conflicts that are impacting project delivery. What comprehensive approach would you take to rebuild team dynamics and improve collaboration?
-              5. You find yourself leading a group of strangers through a challenging wilderness expedition with limited resources. Describe how you would ensure the team's survival and maintain group morale.
-              6. A mysterious technological artifact has been discovered that could potentially change the course of human civilization. Walk us through your approach to understanding and responsibly managing this discovery.
-              7. You've been given the opportunity to design a completely new society from scratch on an uninhabited planet. What fundamental principles and structures would you implement?
-              8. An unexpected global crisis threatens the stability of human civilization. Outline your strategy for coordinating a response and helping humanity navigate this extreme challenge.
-              9. You discover you have the ability to solve one global problem completely. Which problem would you choose, and how would you approach solving it?
-              10. You're transported to a world where the laws of physics work differently. Describe how you would adapt and help your team survive in this completely alien environment.
-              11. A time-travel opportunity allows you to make one significant intervention in human history. What would you choose to do, and how would you minimize unintended consequences?
-              12. You've been given unlimited resources to create a revolutionary educational system that could transform how humans learn and grow. Describe your vision and approach.
+            "You're stuck in a Las Vegas elevator with Elon Musk and a stand-up comedian. How do you keep everyone entertained for the next 5 min?",
+  "You've been given a free round-the-world ticket, but you can only choose three completely unrelated activities in 3 different cities. What would they be?",
+  "You are in MasterChef USA and you have been asked to reinvent a classic dish from your favorite cuisine. What dish would you like to reinvent and how? Also, what name would you give.",
+  "During a poker tournament, you realize the person next to you is Jeff Bezos. What would be your reaction?",
+  "As a Hollywood Director you have an opportunity to re-write the ending for a famous movie of yours. Which moview would this be and what would be the alternate ending.",
+  "You have the opportunity to suggest an unconventional team-building exercise that would actually make people want to participate enthusiastically. What would it be?",
+  "You are throwing a house party and have the opportunity to invite 3 famous celebrities. Who would they be and why",
+  "You discover a unique athletic ability that no one else has and you can use it any sport of your choice? what will your superpower be and which sport will you use it in?",
+  "You’re invited to a private dinner with the captain of your favorite sports team. What conversation starter do you use to break the ice?",
+  "You find yourself living out the plot of your favorite movie, but with the ability to change one critical moment. What would you alter?",
+  "Design the most unique travel experience possible that doesn't involve traditional tourism. What's your concept?",
+  "You have been given a flight ticket to an unknown destination, but you have to leave in the next 10 min, what all will you pack in your bag?",
+  "You have the opportunity to suggest an unconventional team-building exercise that would actually make people want to participate enthusiastically. What would it be?",
+  "You've just hit the jackpot on a slot machine. What are your immediate thoughts and how do you plan to handle this sudden wealth?"
             """
         }
 
