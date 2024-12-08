@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState } from "react";
@@ -10,10 +11,39 @@ export function UserOnboarding() {
   const [photo, setPhoto] = useState<string | null>(null);
   const [name, setName] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ name, photo });
-    router.push('/assessment')
+
+    const formData = new FormData();
+    formData.append("username", name);
+    if (photo) {
+      formData.append("image", photo);
+    }
+
+    try {
+      console.log(formData);
+
+      const response = await fetch("http://127.0.0.1:5000/api/getStarted", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        router.push("/assessment");
+        console.log(data);
+      } else {
+        const errorData = await response.json();
+        console.error(
+          "Failed to submit data:",
+          response.status,
+          errorData.message
+        );
+        console.error("error:", response.status, errorData.message);
+      }
+    } catch (error) {
+      console.error("Error submitting data:", error);
+    }
   };
 
   return (
@@ -37,8 +67,7 @@ export function UserOnboarding() {
             />
           </div>
 
-          <button 
-
+          <button
             type="submit"
             // disabled={!photo || !name}
             disabled={!name}
