@@ -1,5 +1,4 @@
-from flask import Blueprint , jsonify
-from controller.transcript_controller import analyze_transcripts
+from flask import Blueprint, jsonify
 
 api_routes = Blueprint('api_routes', __name__)
 
@@ -17,4 +16,13 @@ def health_check():
 
 @api_routes.route('/api/analyze_transcripts/', methods=['POST'])
 def analyze_transcripts_route():
+    from controller.transcript_controller import analyze_transcripts
     return analyze_transcripts()
+
+# CRUD
+
+
+@api_routes.route('/api/getStarted', methods=['POST'])
+def create_user_route():
+    from controller.user_controller import create_user
+    return create_user()
