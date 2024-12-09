@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
@@ -42,7 +43,7 @@ export default function Page() {
     });
 
     if (!response.ok) {
-      console.error("Error fetching final category:", response.statusText);
+      console.log("Error fetching final category:", response.statusText);
       return null;
     }
 
