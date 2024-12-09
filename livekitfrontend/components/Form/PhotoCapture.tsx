@@ -50,7 +50,7 @@ export function PhotoCapture({
         <button
           type="button"
           onClick={onRetake}
-          className=" end-test-button w-full text-white py-2 px-4 rounded-lg font-medium
+          className=" bg-orange-500 w-full text-white py-2 px-4 rounded-lg font-medium
                       focus:outline-none focus:ring-2  
                      focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed
                      transition-colors duration-200 focus:ring-orange-500"
@@ -88,7 +88,7 @@ export function PhotoCapture({
             <button
               type="button"
               onClick={capturePhoto}
-              className=" end-test-button w-full text-white py-2 px-4 rounded-lg font-medium
+              className="bg-orange-500 w-full text-white py-2 px-4 rounded-lg font-medium
                       focus:outline-none focus:ring-2  
                      focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed
                      transition-colors duration-200 focus:ring-orange-500"
