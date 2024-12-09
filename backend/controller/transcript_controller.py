@@ -18,12 +18,69 @@ GROQ_API_URL = os.getenv("GROQ_API_URL")
 TRANSCRIPT_API_URL = 'https://fastapi-server-1081098542602.us-central1.run.app/session/{roomId}/transcript'
 
 
+def send_to_groq(conversations):
+    """
+    Sends the entire conversation to Groq for scoring and categorization.
+    """
+    try:
+        # Format the conversation into a single string to send to Groq
+        conversation_text = "\n".join(
+            [f"Q: {entry.get('content', '')}" for entry in conversations])
+
+     # Prepare Groq request payload
+        groq_payload = {
+            "model": "llama3-8b-8192",
+            "messages": [{
+                "role": "system",
+                "content": f"""
+        You are an evaluator analyzing a conversation transcript. Your task is to categorize the entire conversation into one of the following categories:
+        - Network Ninja
+        - Chaos Coordinator
+        - Deadline Daredevil
+        - Witty Wizard
+
+        Below is the conversation transcript:
+        {conversations}
+
+        Carefully analyze the entire conversation and return the final category. Respond strictly in the following JSON format, without additional explanation or text:
+        {{
+            "finalcategory": "<Your Final Category>"
+        }}
+        """
+            }]
+        }
+
+        headers = {
+            'Authorization': f'Bearer {GROQ_API_KEY}',
+            'Content-Type': 'application/json',
+        }
+
+        # Send request to Groq API
+        response = requests.post(
+            GROQ_API_URL, json=groq_payload, headers=headers)
+
+        if response.status_code != 200:
+            logger.error(f"Error from Groq API: {response.text}")
+            return 'Error from Groq API'
+
+        # Parse Groq response
+        groq_response = response.json()
+        content = groq_response.get('choices', [{}])[0].get(
+            'message', {}).get('content', 'Error parsing response')
+
+        logger.info(f"Groq analysis response: {content}")
+        return content
+
+    except Exception as e:
+        logger.error(f"Error sending conversation to Groq: {str(e)}")
+        return 'Error processing the conversation'
+
+
 def analyze_transcripts():
     """
     Handles POST requests to analyze transcripts based on roomId.
     """
     try:
-
         data = request.get_json()
 
         # Log the incoming request data for debugging
