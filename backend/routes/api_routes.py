@@ -20,9 +20,9 @@ def analyze_transcripts_route():
     from controller.transcript_controller import analyze_transcripts
     return analyze_transcripts()
 
+
+
 # CRUD
-
-
 @api_routes.route('/api/getStarted', methods=['POST'])
 def create_user_route():
     from controller.user_controller import create_user
