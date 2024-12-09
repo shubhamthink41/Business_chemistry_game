@@ -16,7 +16,7 @@ import {
 import { MediaDeviceFailure } from "livekit-client";
 import { useRouter } from "next/navigation";
 import type { AgentState } from "@livekit/components-react";
-import bgImage from "./bgfinal.jpg";
+import bgImage from "../bgfinal.jpg";
 
 
 
