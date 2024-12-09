@@ -31,10 +31,17 @@ export function UserOnboarding() {
     try {
       console.log(formData);
       const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const response = await fetch(`${baseUrl}/api/getStarted`, {
-        method: "POST",
-        body: formData,
-      });
+      // const response = await fetch(`${baseUrl}/api/getStarted`, {
+      //   method: "POST",
+      //   body: formData,
+      // });
+      const response = await fetch(
+        "https://business-chemsitry-backend-1081098542602.us-central1.run.app/api/getStarted",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
