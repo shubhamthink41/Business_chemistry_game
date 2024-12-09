@@ -14,173 +14,118 @@
 .lk-agent-control-bar {
   @apply border-t-0 p-0 h-min mr-4;
 }
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Ensure padding and border are included in width/height */
+}
 
+body {
+  font-family: 'Bowlby One', sans-serif;
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Containers */
 .info-container,
 .results-container,
 .page-container {
   background-image: url("./bgfinal.jpg");
   background-size: cover;
-  background-position: center;
+  background-position: bottom;
   background-repeat: no-repeat;
-  height: 100vh; /* Full viewport height */
+  height: 100vh; /* Minimum full viewport height */
   width: 100%; /* Full width */
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
   background-color: black;
-}
-
-/* styles/globals.css */
-body {
-  font-family: 'Bowlby One', sans-serif;
-}
-
-
-/* .room-container { 
-  background: rgba(255, 255, 255, 0.85);
-  border: 10px solid #f16e00;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 1200px;
-  min-height: 400px;
-  display: flex;
-  padding: 20px;
-  gap: 40px; /* Optional gap between sections 
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-}*/
-
-.left-section,
-.right-section {
-  flex: 1; /* Makes both sections take up equal width */
-  display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
-.end-test-button,
-.connect-btn {
-  padding: 10px 20px;
-  background-color: #f16e00;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.right-section {
-  width: 100%;
-  height: 600px;
-  top: 135px;
-  left: 580px;
-  padding: 20px 0px 20px 0px;
-  gap: 0px;
-  border-radius: 12px 12px 12px 12px;
-  opacity: 0px;
-  box-shadow: 0px 0px 9px 0px #00000033;
-  background: #ffffff24;
-}
-
-.counter {
-  font-size: 62px;
-  font-weight: bold;
-  color: #f16e00;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.sortingText {
-  font-size: 24px;
-  color: #f16e00;
-  margin-top: '2rem';
-  opacity: 0.7;
-  text-align: center;
-  font-style: italic;
-  transition: opacity 1s ease-in-out;
-  animation: fadeIn 2s ease-in-out;
-}
-
-
-
-.homepage{
+/* Homepage */
+.homepage {
   background-image: url("./bgfinal.jpg");
   background-size: cover;
-  background-position: center;
+  background-position: bottom;
   background-repeat: no-repeat;
-}
-
-
-.page-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  justify-content: center;
 }
 
+/* Title Styling */
 .title {
-  font-size: 78.78px;
-  font-weight: 'bold';
-  margin-top: 50px;
-  margin-bottom: 1rem;
-  line-height: 69.33px;
-  letter-spacing: 4%;
-  text-underline-position: from-font;
-  text-decoration-skip-ink: none;
-  font-family: 'Bowlby One', sans-serif;
+  font-size: clamp(2rem, 5vw, 5rem); /* Responsive font size */
+  font-weight: bold;
+  margin: 1rem 0;
+  line-height: 1.2;
+  text-align: center;
   background: linear-gradient(7.29deg, #F16E00 35.04%, #F7C729 82.89%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  
 }
 
+/* Image Container */
 .image-container {
-  
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
   justify-content: center;
-  margin-bottom: 20px;
-  margin-top:80px;
+  margin: 2rem 0;
 
 }
 
 .image-box {
-  width: 350px;/* Adjust as needed */
-  height: 500px; /* Adjust as needed */
+  width: clamp(150px, 20vw, 300px); /* Responsive width */
+  height: clamp(200px, 25vw, 400px); /* Responsive height */
   overflow: hidden;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 20px; /* Adds space around each image box */
-  display: inline-block; /* Ensures it wraps naturally with other elements */
-
-
-  
+  position: relative;
 }
 
 .image-box img {
-  width: 100%;/* Adjust as needed */
-  height: 100%; /*Adjust as needed */
-  object-fit:fill;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
+/* Room Container */
 .room-container {
   width: 100%;
+  max-width: 1200px;
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  padding: 20px;
 }
 
-.connect-btn {
+/* Buttons */
+.connect-btn, .end-btn {
   padding: 10px 20px;
-  background-color: #f16e00;
-  color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 1rem;
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.connect-btn {
+  background-color: #f16e00;
+  color: white;
 }
 
 .connect-btn:hover {
@@ -188,32 +133,91 @@ body {
 }
 
 .end-btn {
-  padding: 12px 25px;
   background-color: #ff4444;
   color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
 }
 
 .end-btn:hover {
   background-color: #e60000;
 }
 
-.control-bar {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+/* Content Flexibility */
+.content {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
 }
+
+/* Responsive Typography */
+.sortingText {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  color: #f16e00;
+  opacity: 0.7;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Responsive Utility Classes */
+.right-section {
+  flex: 1;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 0px 9px 0px #00000033;
+  background: #ffffff24;
+}
+
+/* Keyframes for Animations */
+@keyframes yellowFlicker {
+  0%, 100% {
+    box-shadow: 0 0 20px 5px rgba(255, 255, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px 10px rgba(255, 255, 0, 0.8);
+  }
+}
+
+/* Light Flicker Animations */
+.image-box.yellow-light {
+  animation: yellowFlicker 1.5s infinite alternate;
+}
+
+/* Media Queries for Additional Responsiveness */
+@media (max-width: 768px) {
+  .title {
+    font-size: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .connect-btn, .end-btn {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    bottom: 10px;
+  }
+
+  .room-container {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-box {
+    width: 90%;
+    height: auto;
+  }
+
+  .connect-btn, .end-btn {
+    bottom: 5px;
+  }
+}
+
+
 
 /* styles/globals.css */
 @font-face {
   font-family: 'Bowlby One';
-  src: url('/fonts/BowlbyOne-Regular.woff2') format('woff2'),
-       url('/fonts/BowlbyOne-Regular.woff') format('woff');
-  font-weight: normal;
+  src: url('/fonts/BowlbyOne-Regular.ttf') format('ttf');
+  font-weight: bold;
   font-style: normal;
 }
 
@@ -272,4 +276,21 @@ body {
 .image-box.orange-light {
   animation: orangeFlicker 1.5s infinite alternate;
   
+}
+
+
+
+.zoom-image {
+  position: fixed; /* Ensures the image is positioned relative to the screen */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the image both horizontally and vertically */
+  width: 100px; /* Adjust as necessary */
+  height: 100px; /* Adjust as necessary */
+}
+
+.zoom-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensure the image covers the element without distortion */
 }

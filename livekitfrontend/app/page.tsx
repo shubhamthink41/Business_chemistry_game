@@ -13,11 +13,15 @@ export default function Home() {
     <>
       <Head>
         <title>Business Chemistry Sorting Ceremony</title>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Bowlby+One&display=swap"
+          rel="stylesheet"
+        />
 
       </Head>
 
       <div className="homepage" style={styles.container}>
-        <h1 style={styles.title}>ALCHEMIST OF VEGAS</h1>
+        <h1 style={styles.title}>ALCHEMISTS OF VEGAS</h1>
         <p style={styles.subtitle}>
           “Ah, yes. I know just where to put you...”
         </p>
@@ -47,6 +51,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontWeight: 'bold',
     marginBottom: '1rem',
     lineHeight:'69.33px',
+
     letterSpacing:'4%',
     textUnderlinePosition: 'from-font',
     textDecorationSkipInk:'none',

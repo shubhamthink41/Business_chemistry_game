@@ -1,34 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { LiveKitRoom } from "@livekit/components-react";
-import { BarVisualizer } from "@livekit/components-react";
-import { RoomAudioRenderer } from "@livekit/components-react";
-import { VoiceAssistantControlBar } from "@livekit/components-react";
-import { useVoiceAssistant } from "@livekit/components-react";
-import { DisconnectButton } from "@livekit/components-react";
+import {
+  LiveKitRoom,
+  BarVisualizer,
+  RoomAudioRenderer,
+  VoiceAssistantControlBar,
+  useVoiceAssistant,
+  DisconnectButton,
+} from "@livekit/components-react";
 import { MediaDeviceFailure } from "livekit-client";
-import type { AgentState } from "@livekit/components-react";
 import { useRouter } from "next/navigation";
-import Image from 'next/image';
+import type { AgentState } from "@livekit/components-react";
 
-import card1 from "./card1.png";
-// import TranscriptionHandler from "";
 
 interface TranscriptResponse {
-  results: {
-    question: string;
-    answer: string;
-    scores: {
-      pioneer: number;
-      driver: number;
-      integrator: number;
-      guardian: number;
-    };
-  }[];
+  finalcategory: string;
 }
 
 interface ConnectionDetails {
@@ -37,126 +26,32 @@ interface ConnectionDetails {
 }
 
 export default function Page() {
-  const [connectionDetails, updateConnectionDetails] = useState<
-    ConnectionDetails | undefined
-  >(undefined);
+  const [connectionDetails, setConnectionDetails] = useState<ConnectionDetails | undefined>(undefined);
   const [agentState, setAgentState] = useState<AgentState>("disconnected");
   const [roomId, setRoomId] = useState<string>("");
-  const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(
-    null
-  );
+  const [finalCategory, setFinalCategory] = useState<string | null>(null);
+  const [showZoomImage, setShowZoomImage] = useState<boolean>(false);
+  const router = useRouter();
 
-  const [scores, setScores] = useState({
-    pioneer: 0,
-    driver: 0,
-    integrator: 0,
-    guardian: 0,
-  });
+  const fetchFinalCategory = async (roomId: string) => {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const response = await fetch(`${baseUrl}/api/analyze_transcripts/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ roomId }),
+    });
 
-  const [scoreCounts, setScoreCounts] = useState({
-    pioneer: 0,
-    driver: 0,
-    integrator: 0,
-    guardian: 0,
-  });
-
-  const [averages, setAverages] = useState({
-    pioneer: 0,
-    driver: 0,
-    integrator: 0,
-    guardian: 0,
-  });
-
-//   const [jsonResult, setJsonResult] = useState<string[]>([]);
-//   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
-
-//   useEffect(() => {
-//     const checkLocalStorage = () => {
-//       const questionLog = localStorage.getItem("questionLog");
-//       if (questionLog) {
-//         const index = parseInt(questionLog);
-//         setCurrentQuestionIndex(index);
-//       }
-//     };
-
-//     checkLocalStorage();
-
-//     const interval = setInterval(checkLocalStorage, 100);
-
-//     return () => clearInterval(interval);
-//   }, []);
-
-  const fetchTranscript = async (sessionId: string) => {
-    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL; // Load API base URL from environment
-
-    try {
-      const analyzeResponse = await fetch(
-        `${baseUrl}/api/analyze_transcripts/`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ roomId: sessionId }),
-        }
-      );
-
-      if (!analyzeResponse.ok) throw new Error("Analyze API error");
-
-      const data: TranscriptResponse = await analyzeResponse.json();
-      console.log("Full response data:", data);
-
-      if (!Array.isArray(data.results)) {
-        console.error(
-          "Expected 'results' to be an array, but got:",
-          data.results
-        );
-        return;
-      }
-
-      const updatedScores = { ...scores };
-      const updatedCounts = { ...scoreCounts };
-
-      data.results.forEach(({ scores: resultScores }) => {
-        if (resultScores) {
-          Object.keys(resultScores).forEach((key) => {
-            updatedScores[key as keyof typeof updatedScores] +=
-              resultScores[key as keyof typeof resultScores];
-            updatedCounts[key as keyof typeof updatedCounts] += 1;
-          });
-        }
-      });
-
-      setScores(updatedScores);
-      setScoreCounts(updatedCounts);
-    } catch (error) {
-      console.error("Error fetching transcript or processing data:", error);
-    }
-  };
-
-  const calculateAverages = () => {
-    const totalScores = Object.values(scores).reduce(
-      (acc, score) => acc + score,
-      0
-    );
-
-    if (totalScores === 0) {
-      return { ...averages };
+    if (!response.ok) {
+      console.error("Error fetching final category:", response.statusText);
+      return null;
     }
 
-    return {
-      pioneer: scores.pioneer / (scoreCounts.pioneer || 1),
-      driver: scores.driver / (scoreCounts.driver || 1),
-      integrator: scores.integrator / (scoreCounts.integrator || 1),
-      guardian: scores.guardian / (scoreCounts.guardian || 1),
-    };
-  };
-
-  const stopPolling = () => {
-    if (pollingInterval) clearInterval(pollingInterval);
-    setPollingInterval(null);
+    const data = await response.json();
+    const finalCategory = JSON.parse(data.final_analysis)?.finalcategory;
+    return finalCategory || null;
   };
 
   const shutdownSession = async (roomId: string) => {
-    stopPolling();
     await fetch(`/api/session/${roomId}/shutdown/`, { method: "POST" });
   };
 
@@ -164,88 +59,147 @@ export default function Page() {
     const response = await fetch("/api/connection-details");
     const connectionDetails = await response.json();
 
-    // const parsedResult = JSON.parse(connectionDetails.dynamicContent);
-    // setJsonResult(parsedResult);
-
-    // console.log("parsedResult - ", parsedResult);
-
-    updateConnectionDetails(connectionDetails);
-    setRoomId(connectionDetails?.roomId);
-
-    const interval = setInterval(() => {
-      fetchTranscript(connectionDetails?.roomId);
-    }, 3000);
-    setPollingInterval(interval);
+    setConnectionDetails(connectionDetails);
+    setRoomId(connectionDetails.roomId);
   }, []);
 
   useEffect(() => {
-    if (scores && scoreCounts) {
-      const newAverages = calculateAverages();
-      setAverages(newAverages);
-    }
-  }, [scores, scoreCounts]);
+    return () => {
+      if (roomId) {
+        shutdownSession(roomId);
+      }
+    };
+  }, [roomId]);
 
+  const handleDisconnect = async () => {
+    if (roomId) {
+      await shutdownSession(roomId);
+      const category = await fetchFinalCategory(roomId);
+
+      if (category) {
+        setFinalCategory(category);
+        setShowZoomImage(true); // Trigger the zoom animation
+      } else {
+        console.error("No final category received.");
+        alert("Error: Unable to fetch results. Please try again.");
+      }
+    }
+  };
+
+  const handleAnimationEnd = () => {
+    if (finalCategory) {
+      localStorage.clear(); // Clear session data
+      router.push(`/results?category=${finalCategory}`);
+    }
+  };
+
+  const renderZoomImage = () => {
+    if (!finalCategory) return null;
+  
+    const images = {
+      "Network Ninja": "/images/card1.svg",
+      "Witty Wizard": "/images/card2.svg",
+      "Chaos Coordinator": "/images/card3.svg",
+      "Deadline Daredevil": "/images/card4.svg",
+    } as const; // Use 'as const' for a readonly type
+  
+    // Narrow the type of finalCategory to match the keys of images
+    const imageSrc = images[finalCategory as keyof typeof images] || "";
+  
+    return (
+      <motion.div
+        className="zoom-image"
+        initial={{
+          scale: 0.5, // Start smaller
+          opacity: 0, // Start invisible (dark)
+          y: "-100%", // Start from above the screen
+        }}
+        animate={{
+          scale: 1, // Enlarge the image to fit the center
+          opacity: 1, // Fade in (brighten)
+          y: 0, // Center vertically
+        }}
+        exit={{
+          scale: 0,
+          opacity: 0,
+        }}
+        transition={{
+          duration: 2, // The image will take 2 seconds to enlarge and fade in
+          ease: [0.42, 0, 0.58, 1], // Smooth easing for the animation
+        }}
+        onAnimationComplete={handleAnimationEnd}
+      >
+        <img src={imageSrc} alt={finalCategory} className="zoom-card-image" />
+      </motion.div>
+    );
+  };
+  
+ 
+  
   return (
     <main className="page-container">
-      <h1 className="title">ALCHEMIST OF VEGAS</h1>
+      <h1 className="title">ALCHEMISTS OF VEGAS</h1>
 
-      <div className="image-container">
-      <div className="image-box yellow-light">
-      <img src="/images/card1.png" alt="Image 1"/>
+      {showZoomImage ? (
+        renderZoomImage()
+      ) : (
+        <div className="image-container">
+          <div className="image-box yellow-light">
+            <img src="/images/card1.svg" alt="Image 1" />
+          </div>
+          <div className="image-box blue-light">
+            <img src="/images/card2.svg" alt="Image 2" />
+          </div>
+          <div className="image-box orange-light">
+            <img src="/images/card3.svg" alt="Image 3" />
+          </div>
+          <div className="image-box red-light">
+            <img src="/images/card4.svg" alt="Image 4" />
+          </div>
         </div>
-        <div className="image-box orange-light">
-        <img src="/images/card2.png" alt="Image 2" />
-        </div>
-        <div className="image-box blue-light">
-        <img src="/images/card3.png" alt="Image 3" />
-        </div>
-        <div className="image-box red-light">
-        <img src="/images/card4.png" alt="Image 4" />
-        </div>
-        
-      </div>
+      )}
 
       <LiveKitRoom
-            token={connectionDetails?.participantToken}
-            serverUrl={connectionDetails?.serverUrl}
-            connect={Boolean(connectionDetails)}
-            audio={true}
-            video={false}
-            onMediaDeviceFailure={onDeviceFailure}
-            onDisconnected={() => {
-              stopPolling();
-              updateConnectionDetails(undefined);
-            }}
-            className="w-full h-full flex flex-col justify-center items-center"
-          >
-            <SimpleVoiceAssistant onStateChange={setAgentState} />
-            <AnimatePresence>
-              {agentState === "disconnected" && (
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="connect-btn"
-                  onClick={onConnectButtonClicked}
-                >
-                  Start a conversation
-                </motion.button>
-              )}
-            </AnimatePresence>
+        token={connectionDetails?.participantToken}
+        serverUrl={connectionDetails?.serverUrl}
+        connect={Boolean(connectionDetails)}
+        audio
+        video={false}
+        onMediaDeviceFailure={onDeviceFailure}
+        onDisconnected={() => {
+          setConnectionDetails(undefined);
+        }}
+        className="w-full h-full flex flex-col justify-center items-center"
+      >
+        <SimpleVoiceAssistant onStateChange={setAgentState} />
+        <AnimatePresence>
+          {agentState === "disconnected" && (
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="connect-btn"
+              onClick={onConnectButtonClicked}
+            >
+              Start a conversation
+            </motion.button>
+          )}
+        </AnimatePresence>
 
-            <ControlBar
-              onConnectButtonClicked={onConnectButtonClicked}
-              agentState={agentState}
-              roomId={roomId}
-              onShutdown={shutdownSession}
-              averages={averages}
-            />
+        <ControlBar
+          onConnectButtonClicked={onConnectButtonClicked}
+          agentState={agentState}
+          roomId={roomId}
+          onShutdown={shutdownSession}
+          handleDisconnect={handleDisconnect}
+        />
 
-            <RoomAudioRenderer />
-          </LiveKitRoom>
+        <RoomAudioRenderer />
+      </LiveKitRoom>
     </main>
   );
 }
+
 function SimpleVoiceAssistant({
   onStateChange,
 }: {
@@ -264,42 +218,19 @@ function SimpleVoiceAssistant({
   );
 }
 
-
 function ControlBar({
   onConnectButtonClicked,
   agentState,
   roomId,
   onShutdown,
-  averages,
+  handleDisconnect,
 }: {
   onConnectButtonClicked: () => void;
   agentState: AgentState;
   roomId: string;
   onShutdown: (roomId: string) => Promise<void>;
-  averages: { [key: string]: number };
+  handleDisconnect: () => Promise<void>;
 }) {
-  const router = useRouter();
-
-  const handleDisconnect = async () => {
-    if (roomId) {
-      await onShutdown(roomId);
-    }
-
-    const getHighestScoringCategory = () => {
-      const entries = Object.entries(averages);
-      const [category] = entries.reduce((max, curr) =>
-        curr[1] > max[1] ? curr : max
-      );
-      return category;
-    };
-
-    const highestCategory = getHighestScoringCategory();
-    console.log("Highest-scoring category:", highestCategory);
-    localStorage.clear();
-
-    router.push(`/results?category=${highestCategory}`);
-  };
-
   return (
     <div className="relative h-[100px]">
       <AnimatePresence>
@@ -311,17 +242,13 @@ function ControlBar({
             transition={{ duration: 0.4, ease: [0.09, 1.04, 0.245, 1.055] }}
             className="flex h-8 absolute left-1/2 -translate-x-1/2 justify-center"
           >
-           <VoiceAssistantControlBar controls={{ leave: false }} />
-            <DisconnectButton
-              onClick={handleDisconnect}
-              className="connect-btn"
-            >
+            <VoiceAssistantControlBar controls={{ leave: false }} />
+            <DisconnectButton onClick={handleDisconnect} className="connect-btn">
               END CONVERSATION
             </DisconnectButton>
           </motion.div>
         )}
       </AnimatePresence>
-      {/* <TranscriptionHandler /> */}
     </div>
   );
 }
