@@ -5,15 +5,18 @@ import { useState } from "react";
 import { UserNameInput } from "./UserNameInput";
 import { PhotoCapture } from "./PhotoCapture";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 export function UserOnboarding() {
   const router = useRouter();
   const [photo, setPhoto] = useState<string | null>(null);
   const [name, setName] = useState("");
+  const [isloading, setIsloading] = useState(false);
+  console.log("isloading", isloading);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setIsloading(true);
     const formData = new FormData();
     formData.append("username", name);
     if (photo) {
@@ -33,16 +36,19 @@ export function UserOnboarding() {
         router.push("/assessment");
         console.log(data);
       } else {
+        setIsloading(false);
         const errorData = await response.json();
-        console.error(
+        console.log(
           "Failed to submit data:",
           response.status,
           errorData.message
         );
-        console.error("error:", response.status, errorData.message);
+        console.log("error:", response.status, errorData.message);
       }
+      setIsloading(false);
     } catch (error) {
-      console.error("Error submitting data:", error);
+      setIsloading(false);
+      console.log("Error submitting data:", error);
     }
   };
 
@@ -67,17 +73,29 @@ export function UserOnboarding() {
             />
           </div>
 
-          <button
-            type="submit"
-            // disabled={!photo || !name}
-            disabled={!name}
-            className=" end-test-button w-full text-white py-2 px-4 rounded-lg font-medium
+          {!isloading ? (
+            <button
+              type="submit"
+              // disabled={!photo || !name}
+              disabled={!name}
+              className="bg-orange-500 w-full text-white py-2 px-4 rounded-lg font-medium
                       focus:outline-none focus:ring-2  
                      focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed
                      transition-colors duration-200 focus:ring-orange-500"
-          >
-            Submit
-          </button>
+            >
+              Submit
+            </button>
+          ) : (
+            <button
+              disabled={true}
+              className="bg-orange-500 w-full text-white py-2 px-4 rounded-lg font-medium
+                      focus:outline-none focus:ring-2  
+                     focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed
+                     transition-colors duration-200 focus:ring-orange-500"
+            >
+              Submiting...
+            </button>
+          )}
         </form>
       </div>
     </div>
