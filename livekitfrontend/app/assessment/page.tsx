@@ -18,8 +18,6 @@ import { useRouter } from "next/navigation";
 import type { AgentState } from "@livekit/components-react";
 import bgImage from "../bgfinal.jpg";
 
-
-
 interface TranscriptResponse {
   finalcategory: string;
 }
@@ -30,7 +28,9 @@ interface ConnectionDetails {
 }
 
 export default function Page() {
-  const [connectionDetails, setConnectionDetails] = useState<ConnectionDetails | undefined>(undefined);
+  const [connectionDetails, setConnectionDetails] = useState<
+    ConnectionDetails | undefined
+  >(undefined);
   const [agentState, setAgentState] = useState<AgentState>("disconnected");
   const [roomId, setRoomId] = useState<string>("");
   const [finalCategory, setFinalCategory] = useState<string | null>(null);
@@ -39,11 +39,20 @@ export default function Page() {
 
   const fetchFinalCategory = async (roomId: string) => {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const response = await fetch(`${baseUrl}/api/analyze_transcripts/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ roomId }),
-    });
+    // const response = await fetch(`${baseUrl}/api/analyze_transcripts/`, {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ roomId }),
+    // });
+
+    const response = await fetch(
+      "https://business-chemsitry-backend-1081098542602.us-central1.run.app/api/analyze_transcripts/",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomId }),
+      }
+    );
 
     if (!response.ok) {
       console.log("Error fetching final category:", response.statusText);
@@ -99,17 +108,17 @@ export default function Page() {
 
   const renderZoomImage = () => {
     if (!finalCategory) return null;
-  
+
     const images = {
       "Network Ninja": "/images/card1.svg",
       "Witty Wizard": "/images/card2.svg",
       "Chaos Coordinator": "/images/card3.svg",
       "Deadline Daredevil": "/images/card4.svg",
     } as const; // Use 'as const' for a readonly type
-  
+
     // Narrow the type of finalCategory to match the keys of images
     const imageSrc = images[finalCategory as keyof typeof images] || "";
-  
+
     return (
       <motion.div
         className="zoom-image"
@@ -137,9 +146,7 @@ export default function Page() {
       </motion.div>
     );
   };
-  
- 
-  
+
   return (
     <main className="page-container">
       <h1 className="title p-4" style={styles.title}>
@@ -149,7 +156,6 @@ export default function Page() {
       {showZoomImage ? (
         renderZoomImage()
       ) : (
-
         <div className="image-container">
           <div className="image-box yellow-light">
             <img src="/images/card1.svg" alt="Image 1" />
@@ -249,7 +255,10 @@ function ControlBar({
             transition={{ duration: 0.4, ease: [0.09, 1.04, 0.245, 1.055] }}
           >
             <VoiceAssistantControlBar controls={{ leave: false }} />
-            <DisconnectButton onClick={handleDisconnect} className="connect-btn">
+            <DisconnectButton
+              onClick={handleDisconnect}
+              className="connect-btn"
+            >
               END CONVERSATION
             </DisconnectButton>
           </motion.div>
