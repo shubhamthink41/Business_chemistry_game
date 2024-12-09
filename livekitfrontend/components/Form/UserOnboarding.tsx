@@ -31,7 +31,7 @@ export function UserOnboarding() {
     try {
       console.log(formData);
       const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const response = await fetch(`${baseUrl}api/getStarted`, {
+      const response = await fetch(`${baseUrl}/api/getStarted`, {
         method: "POST",
         body: formData,
       });

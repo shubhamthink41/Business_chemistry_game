@@ -86,12 +86,12 @@ body {
 }
 
 .image-box {
-  width: clamp(150px, 20vw, 300px); /* Responsive width */
-  height: clamp(200px, 25vw, 400px); /* Responsive height */
+  width: clamp(150px, 20vw, 300px); 
+  height: clamp(200px, 25vw, 400px); 
   overflow: hidden;
-  border: 1px solid #ccc;
+  border: 0px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   position: relative;
 }
 
@@ -299,18 +299,3 @@ body {
 
 
 
-.flicker-animation {
-  animation: flicker 1.5s infinite alternate;
-}
-
-@keyframes flicker {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7; /* Adjust this value for more or less flicker */
-  }
-  100% {
-    opacity: 1;
-  }
-}
