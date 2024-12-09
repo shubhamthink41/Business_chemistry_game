@@ -3,3 +3,7 @@ Flask-CORS
 requests
 python-dotenv
 gunicorn
+flask-sqlalchemy
+psycopg2-binary
+flask-migrate
+google-cloud-storage
