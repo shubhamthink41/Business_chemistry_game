@@ -22,10 +22,16 @@ export function UserOnboarding() {
       formData.append("image", photo);
     }
 
+    // const response = await fetch(`${baseUrl}/api/analyze_transcripts/`, {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ roomId }),
+    // });
+
     try {
       console.log(formData);
-
-      const response = await fetch("http://127.0.0.1:5000/api/getStarted", {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await fetch(`${baseUrl}api/getStarted`, {
         method: "POST",
         body: formData,
       });
@@ -54,9 +60,7 @@ export function UserOnboarding() {
   return (
     <div className="w-full max-w-xl bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="p-8">
-        <h1
-          className="text-4xl font-bowlby font-bold text-center text-gray-900 mb-8"
-        >
+        <h1 className="text-4xl font-bowlby font-bold text-center text-gray-900 mb-8">
           Business Chemistry
         </h1>
 
