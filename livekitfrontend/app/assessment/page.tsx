@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
@@ -15,6 +16,7 @@ import {
 import { MediaDeviceFailure } from "livekit-client";
 import { useRouter } from "next/navigation";
 import type { AgentState } from "@livekit/components-react";
+import { styles } from "../page";
 
 
 interface TranscriptResponse {
@@ -139,11 +141,14 @@ export default function Page() {
   
   return (
     <main className="page-container">
-      <h1 className="title">ALCHEMISTS OF VEGAS</h1>
+      <h1 className="title p-4" style={styles.title}>
+        ALCHEMISTS OF VEGAS
+      </h1>
 
       {showZoomImage ? (
         renderZoomImage()
       ) : (
+
         <div className="image-container">
           <div className="image-box yellow-light">
             <img src="/images/card1.svg" alt="Image 1" />
@@ -180,7 +185,6 @@ export default function Page() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="connect-btn"
-
               onClick={onConnectButtonClicked}
             >
               Start a conversation

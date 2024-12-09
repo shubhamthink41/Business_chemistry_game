@@ -6,6 +6,7 @@ import { UserNameInput } from "./UserNameInput";
 import { PhotoCapture } from "./PhotoCapture";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { styles } from "@/app/page";
 
 export function UserOnboarding() {
   const router = useRouter();
@@ -55,7 +56,9 @@ export function UserOnboarding() {
   return (
     <div className="w-full max-w-xl bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="p-8">
-        <h1 className="text-4xl font-bold text-center text-gray-900 mb-8">
+        <h1
+          className="text-4xl font-bowlby font-bold text-center text-gray-900 mb-8"
+        >
           Business Chemistry
         </h1>
 

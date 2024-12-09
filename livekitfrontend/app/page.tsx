@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 
-import bgImage from "./bg41.png";
+import bgImage from "./bgfinal.jpg";
 
 export default function Home() {
   const router = useRouter();
@@ -18,7 +18,7 @@ export default function Home() {
         </Head>
 
         <div className="homepage" style={styles.container}>
-          <h1 style={styles.title}>ALCHEMISTS OF VEGAS</h1>
+          <h1 style={styles.title} className="p-4 ">ALCHEMISTS OF VEGAS</h1>
           <p style={styles.subtitle}>
             “Ah, yes. I know just where to put you...”
           </p>
@@ -31,7 +31,7 @@ export default function Home() {
   );
 }
 
-const styles: { [key: string]: React.CSSProperties } = {
+export const styles: { [key: string]: React.CSSProperties } = {
   container: {
     display: "flex",
     flexDirection: "column",
