@@ -31,7 +31,7 @@ export default function Home() {
   );
 }
 
-export const styles: { [key: string]: React.CSSProperties } = {
+const styles: { [key: string]: React.CSSProperties } = {
   container: {
     display: "flex",
     flexDirection: "column",

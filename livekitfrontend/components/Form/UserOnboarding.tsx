@@ -5,8 +5,6 @@ import { useState } from "react";
 import { UserNameInput } from "./UserNameInput";
 import { PhotoCapture } from "./PhotoCapture";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
-import { styles } from "@/app/page";
 
 export function UserOnboarding() {
   const router = useRouter();

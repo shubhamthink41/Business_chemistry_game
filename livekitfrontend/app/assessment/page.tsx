@@ -16,7 +16,8 @@ import {
 import { MediaDeviceFailure } from "livekit-client";
 import { useRouter } from "next/navigation";
 import type { AgentState } from "@livekit/components-react";
-import { styles } from "../page";
+import bgImage from "./bgfinal.jpg";
+
 
 
 interface TranscriptResponse {
@@ -262,3 +263,52 @@ function onDeviceFailure(error?: MediaDeviceFailure) {
   console.error(error);
   alert("Permission error. Please reload.");
 }
+
+const styles: { [key: string]: React.CSSProperties } = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100vh",
+    color: "#f97316",
+    textAlign: "center",
+    backgroundImage: `url(${bgImage})`,
+  },
+
+  title: {
+    fontSize: "78.78px",
+    fontWeight: "bold",
+    marginBottom: "1rem",
+    lineHeight: "69.33px",
+
+    letterSpacing: "4%",
+    textUnderlinePosition: "from-font",
+    textDecorationSkipInk: "none",
+    background: "linear-gradient(7.29deg, #F16E00 35.04%, #F7C729 82.89%)",
+    WebkitBackgroundClip: "text",
+    backgroundClip: "text",
+    color: "transparent",
+    fontFamily: "Bowlby One",
+  },
+  subtitle: {
+    fontSize: "1.25rem",
+    fontStyle: "italic",
+    marginBottom: "2rem",
+    color: "#ffffff",
+  },
+  button: {
+    padding: "0.75rem 1.5rem",
+    fontSize: "1rem",
+    fontWeight: "bold",
+    color: "#ffffff",
+    backgroundColor: "#f97316",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease",
+  },
+  buttonHover: {
+    backgroundColor: "#c65a0b",
+  },
+};
