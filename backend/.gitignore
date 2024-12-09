@@ -4,3 +4,7 @@
 .env*
 __pycache__
 __pycache__*
+backend/controller/__pycache__/__init__.cpython-310.pyc
+backend/routes/__pycache__/__init__.cpython-310.pyc
+backend/routes/__pycache__/api_routes.cpython-310.pyc
+
