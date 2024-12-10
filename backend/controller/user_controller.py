@@ -8,7 +8,6 @@ GCS_BUCKET_NAME = 'bc_game_bucket'
 
 storage_client = storage.Client()
 
-
 def upload_image_to_gcs(image):
     """Uploads the image to GCS and returns the public URL"""
     filename = secure_filename(image.filename)
@@ -20,7 +19,6 @@ def upload_image_to_gcs(image):
     blob.make_public()
 
     return blob.public_url
-
 
 def create_user():
     try:

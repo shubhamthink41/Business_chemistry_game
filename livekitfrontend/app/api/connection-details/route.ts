@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 interface TokenResponse {
@@ -117,7 +118,7 @@ export async function GET() {
     const resultString: string = JSON.stringify(randomQuestions);
 
     console.log("Selected random Questions are : ", randomQuestions);
-    const dynamicContent = resultString;
+    const dynamicContent = "";
 
     // Fetch the participant token
     const participantToken = await fetchToken(
